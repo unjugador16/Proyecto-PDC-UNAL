@@ -1,11 +1,30 @@
 texto = list(map(str,open(f'{input()}.txt', 'r'))) # # ingresa el nombre del libro y carga el archivo de texto para guardarlo en una lista
-texto = texto[0] # como la lista es de un solo elemento que es el string 
+#texto = texto[0] # como la lista es de un solo elemento que es el string 
+#Tenemos que quitar la forma en que se convierten las letras con tildes o la ñ, porque se crean nuevas letras, tambien esta tomado el salto de linea y
 
+def contar_palabras(texto):
+    cont = 0
+    for i in range(0, len(texto)-1):
+        if texto[i] != ' ' and texto[i+1] == ' ':
+            cont += 1
+    if texto[-1] != ' ': cont += 1 
+    return cont
+def contar_linea(texto):
+    cont = 0
+    for i in texto:
+        if i!=' ':
+            cont += 1
+    return [cont, contar_palabras(texto)]
 def contar(texto):
     """
     Devuelve la cantidad de caracteres y palabras en el texto de la forma (caracteres, palabras)
     """
-    return len(texto)
+    contador_final = {'caracteres':0, 'palabras':0}
+    for linea in texto:
+        contador_final['caracteres'] += contar_linea(linea)[0]
+        contador_final['palabras'] += contar_linea(linea)[1]
+    return contador_final
+print('Cantidad de caracteres: '+str(contar(texto)['caracteres']),', Cantidad de palabras: '+str(contar(texto)['palabras']))
 
 def frecuencia(texto):
     """
