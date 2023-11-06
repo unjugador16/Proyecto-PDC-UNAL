@@ -1,22 +1,26 @@
 import matplotlib.pyplot as plt
 
-texto = open(f'{input()}.txt', 'r', encoding='utf-8') # # ingresa el nombre del libro y carga el archivo de texto para guardarlo en una lista 
+texto = open(f'{input()}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro y carga el archivo de texto para guardarlo en una lista 
 texto_leido = texto.read()
+caracteres = r"ºª!|@·#$~%&¬/\()=?'¿¡`^[]+*çÇ}¨´{_-:.;,"
+caracteres += '"' # como no pude poner las dobles comillas en el pimer string porque lo definí con comillas dobles, las sumo acá
 
+texto_sin_caracteres = ''
 texto_crudo = ''
+
 for i in texto_leido:
-    if i == ' ' or i == '\n': # se pasa por el texto y si hay un espacio o salto de lina que lo omita
-        continue
-    texto_crudo += i # el cuento es el texto sin espacios ni saltos de linea, por lo que la cantidad de caracteres es la longitud
+    if i == '\n':
+        texto_sin_caracteres += ' '
+    if i not in caracteres and i != '\n':
+        texto_sin_caracteres += i
+        if i != ' ':
+            texto_crudo += i  # el crudo es el texto sin espacios ni saltos de linea ni signos, por lo que la cantidad de caracteres es la longitud
 
 def contar(texto, crudo):
     """
     Devuelve la cantidad de caracteres y palabras en el texto de la forma [caracteres, palabras]
     """
     return len(crudo), len(texto.split())
-
-contado = contar(texto_leido, texto_crudo) 
-print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
 
 def frecuencia(crudo):
     """
@@ -31,8 +35,6 @@ def frecuencia(crudo):
 
     plt.bar(letras.keys(),letras.values())
     plt.show()
-    
-frecuencia(texto_crudo)
 
 def frec_long_palabras(texto):
     """
@@ -45,22 +47,42 @@ def frec_long_palabras(texto):
             long_palabras[str(len(i))] += 1
         else:
             long_palabras[str(len(i))] = 1
-    plt.bar(long_palabras.keys(),long_palabras.values()) # problema: la palabra "¿que" la toma como 4 caracteres, la deberia tomar como de 3?
+    plt.bar(long_palabras.keys(),long_palabras.values())
     plt.show()
-    
-frec_long_palabras(texto_leido)
+
+def repetidos(texto):
+    frec_pal , frec_pal_inv = {} , {}
+    for i in texto.split(): # se agrega la frecuencia de cada palabra a un diccionario
+        if i in frec_pal:
+            frec_pal[i] += 1
+        else:
+            frec_pal[i] = 1
+    for key, value in frec_pal.items(): # se invierten las llaves y valores
+        if value in frec_pal_inv:
+            frec_pal_inv[value].append(key)
+        else:
+            frec_pal_inv[value] = [key]
+    return frec_pal_inv
 
 def frec_palabras(texto):
     """
     Calcula la frecuencia de cada palabra y muestra las 100 mas repetidas
     """
-    pass
+    cien_pal , cont = [] , 100
+    frec_pal_inv = repetidos(texto)
+    while cont > 0 and len(frec_pal_inv) > 0:
+        cien_pal.extend(frec_pal_inv[max(frec_pal_inv)]) # se agrega a una lista las 10 palabras mas repetidaas
+        cont -= len(frec_pal_inv[max(frec_pal_inv)])
+        del frec_pal_inv[max(frec_pal_inv)]
+    return cien_pal
 
 def palabras_dist(texto):
     """
     Retorna la cantidad de palabras no repetidas que hay en el texto
     """
-    pass
+    frec_pal_inv = repetidos(texto)
+    return len(frec_pal_inv[1])
+    
 
 def identifica_idioma(texto):
     """
@@ -91,8 +113,20 @@ def lugares(texto):
     Identifica los lugares mencionados en el texto (solo para obras en español)
     """
     pass
+
 def tiempo(texto):
     """
     Identifica el tiempo en el que transcurre el texto (edad contemporanea, futurista, edad media, etc...)
     """
     pass
+
+contado = contar(texto_sin_caracteres, texto_crudo) 
+print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
+
+frecuencia(texto_crudo)
+
+frec_long_palabras(texto_sin_caracteres)
+
+print(frec_palabras(texto_sin_caracteres))
+
+print(palabras_dist(texto_sin_caracteres))
