@@ -15,7 +15,7 @@ def contar(texto, crudo):
     """
     return len(crudo), len(texto.split())
 
-contado = contar(texto_leido, texto_crudo)
+contado = contar(texto_leido, texto_crudo) # nose
 print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
 
 def frecuencia(crudo):
