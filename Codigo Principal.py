@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
 import stopwordsiso as stopwords
-    
-def contar(texto, crudo): #2
+
+def contar(crudo,texto): #2
     """
-    Devuelve la cantidad de caracteres y palabras en el texto de la forma [caracteres, palabras]
+    Devuelve la cantidad de caracteres y palabras en el texto de la forma (caracteres, palabras)
     """
     return len(crudo), len(texto.split())
 
@@ -71,18 +71,18 @@ def identifica_idioma(texto, crudo): #7
     """
     Identifica el idioma en el que está escrito el texto (ingles (en), español (es), frances (fr), portugues (pt), aleman (de))
     """
-    español,frances,aleman,portugues = set(["ñ","á","é","í","ó","ú","ü"]),set(["æ","œ","ç","à","â","é","è","ê","ë","î","ï","ô","ù","û","ü","ÿ"]),set(["ä","ö","ü","ß"]),set(["á","à","â","ã","é","ê","í","ó","ô","õ","ú","ç"])
+    español,frances,aleman,portugues = {"ñ","á","é","í","ó","ú","ü"},{"æ","œ","ç","à","â","é","è","ê","ë","î","ï","ô","ù","û","ü","ÿ"},{"ä","ö","ü","ß"},{"á","à","â","ã","é","ê","í","ó","ô","õ","ú","ç"}
     esp,fra,ale,por = 0,0,0,0
     for i in texto:
         if i in español:
-            esp += texto.index(i)
+            esp += 1
         if i in frances:
-            fra += texto.index(i)
+            fra += 1
         if i in aleman:
-            ale += texto.index(i)
+            ale += 1
         if i in portugues:
-            por += texto.index(i)
-    if max(esp, fra, ale, por) == 0 or max(esp, fra, ale, por)<=((list(map(int,str(contar(texto, crudo)).split())))[0])//1000:
+            por += 1
+    if max(esp, fra, ale, por) == 0 or max(esp, fra, ale, por) <= contar(crudo, texto)[0]//1000:
         return "en"
     elif max(esp, fra, ale, por) == esp:
         return "es"
@@ -140,7 +140,7 @@ texto = open(f'{input()}.txt', 'r', encoding='utf-8') # ingresa el nombre del li
 texto_leido = texto.read() 
 signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*çÇ}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
 
-lang = identifica_idioma(texto_leido) 
+
 texto_sin_signos = '' #sin acentos, saltos de linea o signos (teniendo en cuenta el abecedario del idioma)
 texto_crudo = '' # sin acentos, espacios, saltos de linea o signos
 
@@ -154,9 +154,11 @@ for i in texto_leido:
         if i != ' ':
             texto_crudo += i
 
-##issue## replantear como se va limpiando el texto, primero se quitan saltos de linea, luego signos, luego acentos y por ultimo espacios
+lang = identifica_idioma(texto_leido, texto_crudo) 
 
-contado = contar(texto_sin_signos, texto_crudo) #2
+##issue## replantear como se va limpiando el texto, primero se quitan saltos de linea, luego signos, luego acentos y mayusculas, y por ultimo espacios
+
+contado = contar(texto_crudo, texto_sin_signos) #2
 print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
 
 frec_letras(texto_crudo) #3
@@ -169,18 +171,19 @@ print(palabras_dist(texto_sin_signos)) #6
 
 print(lang) #7
 
-##issue## para las stopwords se requieren acentos
+##issue## para las stopwords se requieren acentos y quitar mayusculas
 
 print(palabras_frec_nostop(texto_sin_signos, lang)) #8 
 
-personajes() #9
+"""
+personajes() #9 primero se quitan las stopwords, el problema es que no podemos quitar las mayuscular porque luego eso nos dice los personajes y lugares, pero hay que quitarlas para identificas si son stopwrds (se evalua con la minuscula en el momento sin alterarla de verdad)
 
 person_principal() #10
 
 lugares() #11
 
 tiempo() #12
-
+"""
 #======================================= Textos de Pruebas =======================================#
 
 ale = "Mein Name ist Anna. Ich komme aus Österreich und lebe seit drei Jahren in Deutschland. Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt. Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München. Meine Mutter ist Köchin, mein Vater arbeitet in einer Bank. Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen. Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik. Physik und Chemie mag ich nicht so gerne. Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis. Am Samstag gehen wir oft ins Kino. Am Sonntag schlafe ich lange, dann koche ich mit meiner Mutter das Mittagessen. Nach dem Essen gehen wir mit dem Hund am See spazieren. Sonntag ist mein Lieblingstag!"
