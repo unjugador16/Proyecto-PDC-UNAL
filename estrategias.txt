@@ -1,0 +1,20 @@
+Todos lo siguientes puntos se realizaron tomando en cuanta que el texto pasó por una limpieza, en donde se eliminaron acentos no pertenecientes al abecedario (é ü) y signos (¿/), teniendo en cuenta el idioma.
+7.	Estrategia #1: g
+Retos al implementar la estrategia y como se abordaron: g
+Análisis de resultados: n
+
+9.	Estrategia #1: g
+Retos al implementar la estrategia y como se abordaron: g
+Análisis de resultados: n
+
+10.	Estrategia #1: g
+Retos al implementar la estrategia y como se abordaron: g
+Análisis de resultados: n
+
+11.	Estrategia #1: g
+Retos al implementar la estrategia y como se abordaron: g
+Análisis de resultados: n
+
+12.	Estrategia #1: g
+Retos al implementar la estrategia y como se abordaron: g
+Análisis de resultados: n

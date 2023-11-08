@@ -1,19 +1,13 @@
 import matplotlib.pyplot as plt
 from langdetect import detect
 import stopwordsiso as stopwords
+
 aleman = stopwords.stopwords("de")
 ingles = stopwords.stopwords("en")
 frances = stopwords.stopwords("fr")
 portugues = stopwords.stopwords("pt")
 español = stopwords.stopwords("es")
-
-idiomas = {
-    'de': aleman,
-    'en': ingles,
-    'fr': frances,
-    'pt': portugues,
-    'es': español
-    }
+idiomas = {'de': aleman, 'en': ingles, 'fr': frances, 'pt': portugues, 'es': español}
 
 texto = open(f'{input()}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro #1
 texto_leido = texto.read() # lo lee para trabajar con el 
@@ -24,7 +18,7 @@ def identifica_idioma(texto): #7
     """
     Identifica el idioma en el que está escrito el texto (ingles (en), español (es), frances (fr), portugues (pt), aleman (de))
     """
-    return detect(texto)
+    return detect(texto) # crear una funcion que reciba el texto e identifique el idioma que que retorne la abreviaura como string
 
 texto_sin_signos = '' #sin acentos, saltos de linea o signos
 texto_crudo = '' # sin acentos, espacios, saltos de linea o signos 
@@ -119,43 +113,44 @@ def palabras_frec_nostop(texto): #8
         del frec_pal_inv[max(frec_pal_inv.keys())]
     return cinc_pal_stop
 
-def personajes(texto):
+def personajes(texto): #9
     """
     Retorna los personajes de la obra junto con la cantidad que se menciona cada uno
     """
     pass
 
-def person_principal(texto):
+def person_principal(texto): #10
     """
     Retorna los personajes principales del texto
     """
     pass
 
-def lugares(texto):
+def lugares(texto): #11
     """
     Identifica los lugares mencionados en el texto (solo para obras en español)
     """
     pass
 
-def tiempo(texto):
+def tiempo(texto): #12
     """
     Identifica el tiempo en el que transcurre el texto (edad contemporanea, futurista, edad media, etc...)
     """
     pass
-"""
+
+
 contado = contar(texto_sin_signos, texto_crudo) 
 print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
 
 print(identifica_idioma(texto_sin_signos))
 
-frec_letras(texto_crudo) # sin acentos
+frec_letras(texto_crudo)
 
 frec_long_palabras(texto_sin_signos)
 
-print(frec_palabras(texto_sin_signos)) #sin acentos
+print(frec_palabras(texto_sin_signos))
 
-print(palabras_dist(texto_sin_signos)) #sin acentos
-"""
-print(frec_palabras(texto_sin_signos)) # sin acentos
+print(palabras_dist(texto_sin_signos))
 
-print(palabras_frec_nostop(texto_sin_signos)) #sin acentos
+print(frec_palabras(texto_sin_signos))
+
+print(palabras_frec_nostop(texto_sin_signos))
