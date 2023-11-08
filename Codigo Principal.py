@@ -67,7 +67,7 @@ def palabras_dist(texto): #6
     """
     return len(set(texto.split()))
 
-def identifica_idioma(texto): #7
+def identifica_idioma(texto, crudo): #7
     """
     Identifica el idioma en el que está escrito el texto (ingles (en), español (es), frances (fr), portugues (pt), aleman (de))
     """
@@ -82,7 +82,7 @@ def identifica_idioma(texto): #7
             ale += texto.index(i)
         if i in portugues:
             por += texto.index(i)
-    if max(esp, fra, ale, por) == 0:
+    if max(esp, fra, ale, por) == 0 or max(esp, fra, ale, por)<=((list(map(int,str(contar(texto, crudo)).split())))[0])//1000:
         return "en"
     elif max(esp, fra, ale, por) == esp:
         return "es"
