@@ -1,5 +1,13 @@
 import matplotlib.pyplot as plt
 import stopwordsiso as stopwords
+import spacy as sp
+
+def leer_texto(nombre): #1
+    """
+    Devuelve el texto leido
+    """
+    texto = open(f'{nombre}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro #1
+    return texto.read() 
 
 def contar(crudo,texto): #2
     """
@@ -136,25 +144,23 @@ def tiempo(texto): #12
 
 #======================================= Empieza el Codigo =======================================#
 
-texto = open(f'{input()}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro #1
-texto_leido = texto.read() 
 signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*çÇ}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
-
-
 texto_sin_signos = '' #sin acentos, saltos de linea o signos (teniendo en cuenta el abecedario del idioma)
-texto_crudo = '' # sin acentos, espacios, saltos de linea o signos
+texto_crudo = '' # sin saltos de linea, signos, acentos, mayusculas y espacios
 
 ##issue## segun el abecedario del idioma, que se dejen algunos caracteres como el ß o '
 
-for i in texto_leido:
+texto = leer_texto(input('Ingrese el nombre de la obra: ')) #1
+
+for i in texto:
     if i == '\n':
         texto_sin_signos += ' ' 
-    if i not in signos and i != '\n': # hay que hacer una funcion que elimine acentos
+    if i not in signos and i != '\n': # hay que hacer una funcion que elimine acentos y mayusculas
         texto_sin_signos += i
         if i != ' ':
             texto_crudo += i
 
-lang = identifica_idioma(texto_leido, texto_crudo) 
+lang = identifica_idioma(texto, texto_crudo) 
 
 ##issue## replantear como se va limpiando el texto, primero se quitan saltos de linea, luego signos, luego acentos y mayusculas, y por ultimo espacios
 
