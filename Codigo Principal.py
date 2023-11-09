@@ -1,9 +1,17 @@
 import matplotlib.pyplot as plt
 import stopwordsiso as stopwords
-    
-def contar(texto, crudo): #2
+import spacy as sp
+
+def leer_texto(nombre): #1
     """
-    Devuelve la cantidad de caracteres y palabras en el texto de la forma [caracteres, palabras]
+    Devuelve el texto leido
+    """
+    texto = open(f'{nombre}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro #1
+    return texto.read() 
+
+def contar(crudo,texto): #2
+    """
+    Devuelve la cantidad de caracteres y palabras en el texto de la forma (caracteres, palabras)
     """
     return len(crudo), len(texto.split())
 
@@ -67,22 +75,22 @@ def palabras_dist(texto): #6
     """
     return len(set(texto.split()))
 
-def identifica_idioma(texto): #7
+def identifica_idioma(texto, crudo): #7
     """
     Identifica el idioma en el que está escrito el texto (ingles (en), español (es), frances (fr), portugues (pt), aleman (de))
     """
-    español,frances,aleman,portugues = set(["ñ","á","é","í","ó","ú","ü"]),set(["æ","œ","ç","à","â","é","è","ê","ë","î","ï","ô","ù","û","ü","ÿ"]),set(["ä","ö","ü","ß"]),set(["á","à","â","ã","é","ê","í","ó","ô","õ","ú","ç"])
+    español,frances,aleman,portugues = {"ñ","á","é","í","ó","ú","ü"},{"æ","œ","ç","à","â","é","è","ê","ë","î","ï","ô","ù","û","ü","ÿ"},{"ä","ö","ü","ß"},{"á","à","â","ã","é","ê","í","ó","ô","õ","ú","ç"}
     esp,fra,ale,por = 0,0,0,0
     for i in texto:
-        if i in español:
-            esp += texto.index(i)
-        if i in frances:
-            fra += texto.index(i)
-        if i in aleman:
-            ale += texto.index(i)
-        if i in portugues:
-            por += texto.index(i)
-    if max(esp, fra, ale, por) == 0:
+        if i.lower() in español:
+            esp += 1
+        if i.lower() in frances:
+            fra += 1
+        if i.lower() in aleman:
+            ale += 1
+        if i.lower() in portugues:
+            por += 1
+    if max(esp, fra, ale, por) == 0 or max(esp, fra, ale, por) <= crudo//1000:
         return "en"
     elif max(esp, fra, ale, por) == esp:
         return "es"
@@ -136,51 +144,93 @@ def tiempo(texto): #12
 
 #======================================= Empieza el Codigo =======================================#
 
-texto = open(f'{input()}.txt', 'r', encoding='utf-8') # ingresa el nombre del libro #1
-texto_leido = texto.read() 
-signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*çÇ}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
+acentos = {
+    'a': {'á','ä','à','â','ã'},
+    'e': {'é','ë','è','ê'},
+    "i": {'í','ï','ì','î'},
+    "o": {'ó','ö','ò','ô','õ'},
+    "u": {'ú','ü','ù','û'},
+    "y": {'ý','ÿ'}
+}
 
-lang = identifica_idioma(texto_leido) 
-texto_sin_signos = '' #sin acentos, saltos de linea o signos (teniendo en cuenta el abecedario del idioma)
-texto_crudo = '' # sin acentos, espacios, saltos de linea o signos
+signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
+acentos = {'á','ä','à','â','ã','é','ë','è','ê','í','ï','ì','î','ó','ö','ò','ô','õ','ú','ü','ù','û','ý','ÿ'}
+correccion = {
+    'a': {'á','ä','à','â','ã'},
+    'e': {'é','ë','è','ê'},
+    "i": {'í','ï','ì','î'},
+    "o": {'ó','ö','ò','ô','õ'},
+    "u": {'ú','ü','ù','û'},
+    "y": {'ý','ÿ'}
+}
+texto_sin_saltos = ''
+texto_sin_signos = '' 
+texto_sin_mayus = ''
+texto_sin_acentos = ''
+texto_crudo = '' 
 
 ##issue## segun el abecedario del idioma, que se dejen algunos caracteres como el ß o '
 
-for i in texto_leido:
-    if i == '\n':
-        texto_sin_signos += ' ' 
-    if i not in signos and i != '\n': # hay que hacer una funcion que elimine acentos
-        texto_sin_signos += i
-        if i != ' ':
-            texto_crudo += i
+texto = leer_texto(input('Ingrese el nombre de la obra: ')) #1
+for i in texto:
+    if i not in signos and i != "'" and i != '\n' and i != ' ':
+        if i in acentos:
+            for j in correccion:
+                if i in correccion[j]:
+                    texto_crudo += j.lower()
+        else:
+            texto_crudo += i.lower()
 
-##issue## replantear como se va limpiando el texto, primero se quitan saltos de linea, luego signos, luego acentos y por ultimo espacios
+lang = identifica_idioma(texto, len(texto_crudo)) 
 
-contado = contar(texto_sin_signos, texto_crudo) #2
+for i in texto:
+    if i != '\n':
+        texto_sin_saltos += i # es el texto normal sin saltos de linea
+    else:
+        texto_sin_saltos += ' '
+
+for i in texto_sin_saltos:
+    if i not in signos:
+        if i != "'" :
+            texto_sin_signos += i  # 
+        elif lang == "en" or lang == "fr":
+            texto_sin_signos += "'"  #
+
+for i in texto_sin_signos:
+    texto_sin_mayus += i.lower() # para la funcion de stopwords
+
+for i in texto_sin_mayus:
+    if i in acentos:
+        for j in correccion:
+            if i in correccion[j]:
+                texto_sin_acentos += j
+    else:
+        texto_sin_acentos += i
+
+contado = contar(texto_crudo, texto_sin_signos) #2
 print(f'Cantidad de caracteres: {contado[0]}, Cantidad de palabras: {contado[1]}')
 
 frec_letras(texto_crudo) #3
 
 frec_long_palabras(texto_sin_signos) #4
 
-print(frec_palabras(texto_sin_signos)) #5
+print(frec_palabras(texto_sin_acentos)) #5
 
-print(palabras_dist(texto_sin_signos)) #6
+print(palabras_dist(texto_sin_acentos)) #6
 
 print(lang) #7
 
-##issue## para las stopwords se requieren acentos
+print(palabras_frec_nostop(texto_sin_mayus, lang)) #8 
 
-print(palabras_frec_nostop(texto_sin_signos, lang)) #8 
-
-personajes() #9
+"""
+personajes() #9 primero se quitan las stopwords, el problema es que no podemos quitar las mayuscular porque luego eso nos dice los personajes y lugares, pero hay que quitarlas para identificas si son stopwrds (se evalua con la minuscula en el momento sin alterarla de verdad)
 
 person_principal() #10
 
 lugares() #11
 
 tiempo() #12
-
+"""
 #======================================= Textos de Pruebas =======================================#
 
 ale = "Mein Name ist Anna. Ich komme aus Österreich und lebe seit drei Jahren in Deutschland. Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt. Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München. Meine Mutter ist Köchin, mein Vater arbeitet in einer Bank. Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen. Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik. Physik und Chemie mag ich nicht so gerne. Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis. Am Samstag gehen wir oft ins Kino. Am Sonntag schlafe ich lange, dann koche ich mit meiner Mutter das Mittagessen. Nach dem Essen gehen wir mit dem Hund am See spazieren. Sonntag ist mein Lieblingstag!"
