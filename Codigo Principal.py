@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import stopwordsiso as stopwords
-import spacy as sp
 
 def leer_texto(nombre): #1
     """
@@ -144,15 +143,6 @@ def tiempo(texto): #12
 
 #======================================= Empieza el Codigo =======================================#
 
-acentos = {
-    'a': {'á','ä','à','â','ã'},
-    'e': {'é','ë','è','ê'},
-    "i": {'í','ï','ì','î'},
-    "o": {'ó','ö','ò','ô','õ'},
-    "u": {'ú','ü','ù','û'},
-    "y": {'ý','ÿ'}
-}
-
 signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
 acentos = {'á','ä','à','â','ã','é','ë','è','ê','í','ï','ì','î','ó','ö','ò','ô','õ','ú','ü','ù','û','ý','ÿ'}
 correccion = {
@@ -168,8 +158,6 @@ texto_sin_signos = ''
 texto_sin_mayus = ''
 texto_sin_acentos = ''
 texto_crudo = '' 
-
-##issue## segun el abecedario del idioma, que se dejen algunos caracteres como el ß o '
 
 texto = leer_texto(input('Ingrese el nombre de la obra: ')) #1
 for i in texto:
@@ -192,9 +180,9 @@ for i in texto:
 for i in texto_sin_saltos:
     if i not in signos:
         if i != "'" :
-            texto_sin_signos += i  # 
+            texto_sin_signos += i
         elif lang == "en" or lang == "fr":
-            texto_sin_signos += "'"  #
+            texto_sin_signos += "'"
 
 for i in texto_sin_signos:
     texto_sin_mayus += i.lower() # para la funcion de stopwords
