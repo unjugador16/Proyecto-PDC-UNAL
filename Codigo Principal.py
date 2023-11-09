@@ -155,7 +155,9 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
             luga.append(ent.text)
         elif ent.label_=="PERSON":
             pers[ent.text]=pers.get(ent.text,0)+1
-        return pers,luga
+    plt.bar(pers.keys(),pers.values())
+    plt.show()
+    return pers,luga
 
 def personajes_principales(pers,longitud_lista_palabras): #10
     inv,pers_prin={},[]
