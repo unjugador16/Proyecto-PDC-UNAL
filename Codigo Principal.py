@@ -206,9 +206,9 @@ frec_letras(texto_crudo) #3
 
 frec_long_palabras(texto_sin_signos) #4
 
-print(frec_palabras(texto_sin_acentos)) #5
+print(frec_palabras(texto_sin_mayus)) #5
 
-print(palabras_dist(texto_sin_acentos)) #6
+print(palabras_dist(texto_sin_mayus)) #6
 
 print(lang) #7
 
