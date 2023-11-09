@@ -11,7 +11,11 @@ sp_de = STOP_WORDS
 from spacy.lang.pt.stop_words import STOP_WORDS
 sp_pt = STOP_WORDS
 import spacy
-pln = spacy.load("es_core_news_sm")
+nlpes = spacy.load("es_core_news_sm")
+nlpen = spacy.load("en_core_web_sm")
+nlpde = spacy.load("nl_core_news_sm")
+nlpfr = spacy.load("fr_core_news_sm")
+nlppo = spacy.load("pt_core_news_sm")
 
 def leer_texto(nombre): #1
     """
