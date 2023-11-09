@@ -1,5 +1,17 @@
 import matplotlib.pyplot as plt
-import stopwordsiso as stopwords
+from stopwordsiso import stopwords as stp
+from spacy.lang.es.stop_words import STOP_WORDS
+sp_es = STOP_WORDS
+from spacy.lang.en.stop_words import STOP_WORDS
+sp_en = STOP_WORDS
+from spacy.lang.fr.stop_words import STOP_WORDS
+sp_fr = STOP_WORDS
+from spacy.lang.de.stop_words import STOP_WORDS
+sp_de = STOP_WORDS
+from spacy.lang.pt.stop_words import STOP_WORDS
+sp_pt = STOP_WORDS
+import spacy
+pln = spacy.load("es_core_news_sm")
 
 def leer_texto(nombre): #1
     """
@@ -44,7 +56,7 @@ def frec_long_palabras(texto): #4
 
 def repetidos(texto): 
     frec_pal , frec_pal_inv = {} , {}
-    for i in texto.split(): # se agrega la frecuencia de cada palabra a un diccionario
+    for i in texto: # se agrega la frecuencia de cada palabra a un diccionario
         if i in frec_pal:
             frec_pal[i] += 1
         else:
@@ -61,7 +73,7 @@ def frec_palabras(texto): #5
     Calcula la frecuencia de cada palabra y muestra las 100 mas repetidas
     """
     cien_pal , cont = [] , 100
-    frec_pal_inv = repetidos(texto)
+    frec_pal_inv = repetidos(texto.split())
     while cont > 0 and len(frec_pal_inv) > 0:
         cien_pal.extend(frec_pal_inv[max(frec_pal_inv)]) # se agrega a una lista las 100 palabras mas repetidas
         cont -= len(frec_pal_inv[max(frec_pal_inv)])
@@ -100,21 +112,26 @@ def identifica_idioma(texto, crudo): #7
     elif max(esp, fra, ale, por) == por:
         return "pt"
 
+def elimina_stop(texto, lang):
+    idiomas = {'de': stp("de") | sp_de, 'en': stp("en") | sp_en, 'fr': stp("fr") | sp_fr, 'pt': stp("pt") | sp_pt, 'es': stp("es") | sp_es}
+    stop_w = idiomas[lang]
+    no_stop = []
+    for i in texto.split():
+        if i not in stop_w:
+            no_stop.append(i)
+    return no_stop
+
 def palabras_frec_nostop(texto,lang): #8
     """
     Muestra las 50 palabaras mas frecuentes que no corresponen a stop words
     """
-    idiomas = {'de': stopwords.stopwords("de"), 'en': stopwords.stopwords("en"), 'fr': stopwords.stopwords("fr"), 'pt': stopwords.stopwords("pt"), 'es': stopwords.stopwords("es")}
-    stop_w = idiomas[lang]
-    cinc_pal_stop = []
-    frec_pal_inv = repetidos(texto)
-    cont = 50
+    texto_sin_stop = elimina_stop(texto, lang) # es una lista con las palabras del texto que no son stopwords
+    cinc_pal_stop , cont = [] , 50
+    frec_pal_inv = repetidos(texto_sin_stop)
     while cont > 0 and len(frec_pal_inv) > 0:
-        for i in frec_pal_inv[max(frec_pal_inv.keys())]:
-            if i not in stop_w:
-                cinc_pal_stop.append(i)
-                cont -= 1
-        del frec_pal_inv[max(frec_pal_inv.keys())]
+        cinc_pal_stop.extend(frec_pal_inv[max(frec_pal_inv)]) # se agrega a una lista las 100 palabras mas repetidas
+        cont -= len(frec_pal_inv[max(frec_pal_inv)])
+        del frec_pal_inv[max(frec_pal_inv)]
     return cinc_pal_stop
 
 def personajes(texto): #9
@@ -139,7 +156,16 @@ def tiempo(texto): #12
     """
     Identifica el tiempo en el que transcurre el texto (edad contemporanea, futurista, edad media, etc...)
     """
-    pass
+    pre_cont , cont , fut = 1,0,0
+
+    for i in texto.split():
+        pass
+    if max(pre_cont,cont,fut) == pre_cont:
+        return "Pre-Contemporaneo"
+    elif max(pre_cont,cont,fut) == cont:
+        return "Contemporaneo"
+    else:
+        return "Futurista"
 
 #======================================= Empieza el Codigo =======================================#
 
@@ -206,9 +232,9 @@ frec_letras(texto_crudo) #3
 
 frec_long_palabras(texto_sin_signos) #4
 
-print(frec_palabras(texto_sin_acentos)) #5
+print(frec_palabras(texto_sin_mayus)) #5
 
-print(palabras_dist(texto_sin_acentos)) #6
+print(palabras_dist(texto_sin_mayus)) #6
 
 print(lang) #7
 
@@ -220,10 +246,10 @@ personajes() #9 primero se quitan las stopwords, el problema es que no podemos q
 person_principal() #10
 
 lugares() #11
-
-
-tiempo() #12
 """
+
+print(tiempo(texto_sin_mayus)) #12
+
 #======================================= Textos de Pruebas =======================================#
 
 ale = "Mein Name ist Anna. Ich komme aus Österreich und lebe seit drei Jahren in Deutschland. Ich bin 15 Jahre alt und habe zwei Geschwister: Meine Schwester heißt Klara und ist 13 Jahre alt, mein Bruder Michael ist 18 Jahre alt. Wir wohnen mit unseren Eltern in einem Haus in der Nähe von München. Meine Mutter ist Köchin, mein Vater arbeitet in einer Bank. Ich lese gerne und mag Tiere: Wir haben einen Hund, zwei Katzen und im Garten einen Teich mit Goldfischen. Ich gehe auch gerne in die Schule, mein Lieblingsfach ist Mathematik. Physik und Chemie mag ich nicht so gerne. Nach der Schule gehe ich oft mit meinen Freundinnen im Park spazieren, manchmal essen wir ein Eis. Am Samstag gehen wir oft ins Kino. Am Sonntag schlafe ich lange, dann koche ich mit meiner Mutter das Mittagessen. Nach dem Essen gehen wir mit dem Hund am See spazieren. Sonntag ist mein Lieblingstag!"
