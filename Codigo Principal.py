@@ -138,23 +138,36 @@ def palabras_frec_nostop(texto,lang): #8
         del frec_pal_inv[max(frec_pal_inv)]
     return cinc_pal_stop
 
-def personajes(texto): #9
-    """
-    Retorna los personajes de la obra junto con la cantidad que se menciona cada uno
-    """
-    pass
+def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 para todos los idiomas
+    if lenguaje=="es":
+        texto_procesado=nlpes(texto_sin_saltos)
+    elif lenguaje=="fr":
+        texto_procesado=nlpfr(texto_sin_saltos)
+    elif lenguaje=="de":
+        texto_procesado=nlpde(texto_sin_saltos)
+    elif lenguaje=="pt":
+        texto_procesado=nlppo(texto_sin_saltos)
+    else:
+        texto_procesado=nlpen(texto_sin_saltos)
+    pers,luga={},[]
+    for ent in texto_procesado.ents:
+        if ent.label_=="LOC":
+            luga.append(ent.text)
+        elif ent.label_=="PERSON":
+            pers[ent.text]=pers.get(ent.text,0)+1
+        return pers,luga
 
-def person_principal(texto): #10
-    """
-    Retorna los personajes principales del texto
-    """
-    pass
-
-def lugares(texto): #11
-    """
-    Identifica los lugares mencionados en el texto (solo para obras en español)
-    """
-    pass
+def personajes_principales(pers,longitud_lista_palabras): #10
+    inv,pers_prin={},[]
+    for llave, valor in pers.items():
+        lista = inv.get(valor, [])
+        lista.append(llave)
+        inv[valor] = lista
+    for i in inv:
+        if i>longitud_lista_palabras//450:
+            for j in inv.get(i):
+                pers_prin.append(j)
+    return pers_prin
 
 def tiempo(texto): #12
     """
