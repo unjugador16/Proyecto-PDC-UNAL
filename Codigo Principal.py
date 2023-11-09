@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import stopwordsiso as stopwords
+import spacy
+nlp=spacy.load('es_core_news_sm)
 
 def leer_texto(nombre): #1
     """
