@@ -143,7 +143,7 @@ def tiempo(texto): #12
 
 #======================================= Empieza el Codigo =======================================#
 
-signos = r'ºª!|@·#$~%&¬/\()=?"¿¡`^[]+*}¨´{_-:.;,' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan
+signos = r'ºª!|@·•#$£€~%&¬/\()=?"¿¡`^[]+*}¨´{_-:—.;,‘“”❝❞™®©' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan, y las dos lineas — son diferentes, entonces no las quiten pls
 acentos = {'á','ä','à','â','ã','é','ë','è','ê','í','ï','ì','î','ó','ö','ò','ô','õ','ú','ü','ù','û','ý','ÿ'}
 correccion = {
     'a': {'á','ä','à','â','ã'},
@@ -161,6 +161,8 @@ texto_crudo = ''
 
 texto = leer_texto(input('Ingrese el nombre de la obra: ')) #1
 for i in texto:
+    if i == "’":
+        i = "'"
     if i not in signos and i != "'" and i != '\n' and i != ' ':
         if i in acentos:
             for j in correccion:
@@ -172,6 +174,8 @@ for i in texto:
 lang = identifica_idioma(texto, len(texto_crudo)) 
 
 for i in texto:
+    if i == "’":
+        i = "'"
     if i != '\n':
         texto_sin_saltos += i # es el texto normal sin saltos de linea
     else:
@@ -179,7 +183,7 @@ for i in texto:
 
 for i in texto_sin_saltos:
     if i not in signos:
-        if i != "'" :
+        if i != "'":
             texto_sin_signos += i
         elif lang == "en" or lang == "fr":
             texto_sin_signos += "'"
@@ -216,6 +220,7 @@ personajes() #9 primero se quitan las stopwords, el problema es que no podemos q
 person_principal() #10
 
 lugares() #11
+
 
 tiempo() #12
 """
