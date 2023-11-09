@@ -34,8 +34,18 @@ def identificar_abecedario(a):
     elif max(esp,fra,ale,por)==por:
         return "portugues"
 
-def personas_y_lugares(texto_sin_saltos):
-    pers,luga,texto_procesado={},[],nlp(texto_sin_saltos)
+def personas_y_lugares(texto_sin_saltos,lenguaje):
+    if lenguaje=="es":
+        texto_procesado=nlpes(texto_sin_saltos)
+    elif lenguaje=="fr":
+        texto_procesado=nlpfr(texto_sin_saltos)
+    elif lenguaje=="de":
+        texto_procesado=nlpde(texto_sin_saltos)
+    elif lenguaje=="pt":
+        texto_procesado=nlppo(texto_sin_saltos)
+    else:
+        texto_procesado=nlpen(texto_sin_saltos)
+    pers,luga={},[]
     for ent in texto_procesado.ents:
         if ent.label_=="LOC":
             luga.append(ent.text)
