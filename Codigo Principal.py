@@ -139,7 +139,7 @@ def palabras_frec_nostop(texto,lang): #8
         del frec_pal_inv[max(frec_pal_inv)]
     return cinc_pal_stop
 
-def personas(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 para todos los idiomas
+def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 para todos los idiomas
     if lenguaje=="es":
         texto_procesado=nlpes(texto_sin_saltos)
     elif lenguaje=="fr":
@@ -151,18 +151,24 @@ def personas(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 pa
     else:
         texto_procesado=nlpen(texto_sin_saltos)
     lista_texto=set(texto_sin_saltos.split())
-    dict_pers = {}
-    list_cats_pers = ['PROPN']
-    for oracion in texto_procesado.sents:
-        for palabra in oracion:            
-            if palabra.pos_ in list_cats_pers and str(palabra.text).istitle() and len(str(palabra.text))>2 and str(palabra.text).lower() not in lista_texto:
-                if palabra.text in dict_pers:
-                    dict_pers[palabra.text]+=1
-                else:
-                    dict_pers[palabra.text]=1
-    dict_pers_inv = {valor: clave for clave, valor in dict_pers.items()}
+    dict_pers_o_luga,list_luga,b,dict_pers = {},[],True,{}
+    for palabra in texto_procesado:
+            if str(palabra.text).endswith(".") or str(palabra.text).endswith(". ") or str(palabra.text).endswith("?") or str(palabra.text).endswith("!"):
+                b=False
+            elif str(palabra.text).istitle() and len(str(palabra.text))>2 and str(palabra.text).lower() not in lista_texto and b and palabra.pos_=="PROPN":
+                dict_pers_o_luga[palabra.text]=dict_pers_o_luga.get(palabra.text,0)+1
+            else:
+                b=True
+    for chunk in texto_procesado.sents:
+        for ent in chunk.ents:
+            if ent.text in dict_pers_o_luga:
+                if ent.label_=="PER" or ent.label_=="PERSON":
+                    dict_pers[ent.text]=dict_pers_o_luga.get(ent.text)+1
+                elif ent.label_=="LOC" or ent.label_=="LOCATION" or ent.label_=="GPE":
+                    list_luga.append(ent.text)
+    dict_pers_inv,set_luga = {valor: clave for clave, valor in dict_pers.items()},set(list_luga)
     dict_pers_ord = dict(sorted(dict_pers.items(), key=lambda item: item[1], reverse=True))
-    return dict_pers_ord
+    return dict_pers_ord,set_luga
 
 def personajes_principales(pers,longitud_lista_palabras): #10
     inv,pers_prin={},[]
