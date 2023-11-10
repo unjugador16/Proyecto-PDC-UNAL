@@ -18,6 +18,30 @@ nlpfr = spacy.load("fr_core_news_sm")
 nlppo = spacy.load("pt_core_news_sm")
 import math
 
+def crudificar_texto(texto):
+    texto_crudo=""
+    signos = r'ºª!|@·•#$£€~%&¬/\()=?"¿¡`^[]+*}¨´{_-:—.;,‘“”❝❞™®©' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan, y las dos lineas — son diferentes, entonces no las quiten pls
+    acentos = {'á','ä','à','â','ã','é','ë','è','ê','í','ï','ì','î','ó','ö','ò','ô','õ','ú','ü','ù','û','ý','ÿ'}
+    correccion = {
+    'a': {'á','ä','à','â','ã'},
+    'e': {'é','ë','è','ê'},
+    "i": {'í','ï','ì','î'},
+    "o": {'ó','ö','ò','ô','õ'},
+    "u": {'ú','ü','ù','û'},
+    "y": {'ý','ÿ'}
+    }
+    for i in texto:
+    if i == "’":
+        i = "'"
+    if i not in signos and i != "'" and i != '\n' and i != ' ':
+        if i in acentos:
+            for j in correccion:
+                if i in correccion[j]:
+                    texto_crudo += j.lower()
+        else:
+            texto_crudo += i.lower()
+    return texto_crudo
+
 def leer_texto(nombre): #1
     """
     Devuelve el texto leido
@@ -155,7 +179,7 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     for palabra in texto_procesado:
             if str(palabra.text).endswith(".") or str(palabra.text).endswith(". ") or str(palabra.text).endswith("?") or str(palabra.text).endswith("!"):
                 b=False
-            elif str(palabra.text).istitle() and len(str(palabra.text))>2 and str(palabra.text).lower() not in lista_texto and b and palabra.pos_=="PROPN":
+            elif str(palabra.text).istitle() and len(str(palabra.text))>2 and str(palabra.text).lower() not in lista_texto and b and palabra.pos_=="PROPN" and crudificar_texto(str(palabra.text)) not in lista_texto:
                 dict_pers_o_luga[palabra.text]=dict_pers_o_luga.get(palabra.text,0)+1
             else:
                 b=True
@@ -214,6 +238,8 @@ texto_sin_signos = ''
 texto_sin_mayus = ''
 texto_sin_acentos = ''
 texto_crudo = '' 
+
+
 
 texto = leer_texto(input('Ingrese el nombre de la obra: ')) #1
 for i in texto:
