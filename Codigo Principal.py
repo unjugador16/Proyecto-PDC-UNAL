@@ -183,7 +183,7 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
                 dict_pers_o_luga[palabra.text]=dict_pers_o_luga.get(palabra.text,0)+1
             else:
                 b=True
-    for elemento in dict_pers_o_luga:
+    for elemento in dict_pers_o_luga.keys():
         if dict_pers_o_luga[elemento]==1:
             del dict_pers_o_luga[elemento]
     for chunk in texto_procesado.sents:
