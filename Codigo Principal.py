@@ -149,15 +149,25 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     elif lenguaje=="pt":
         texto_procesado=nlppo(texto_sin_saltos)
     else:
-        texto_procesado=nlpen(texto_sin_saltos)
-    pers,luga={},[]
-    for sent in texto_procesado.sents:
-        for ent in sent.ents:
-            if ent.label_=="LOC" or ent.label_=="GPE":
-                luga.append(ent.text)
-            elif ent.label_=="PER" or ent.label_=="MISC":
-                pers[ent.text]=pers.get(ent.text,0)+1
-    plt.bar(pers.keys(),pers.values())
+        texto_procesado=nlpen(texto_sin_saltos)    
+    dict_cats = {}
+    dict_pers = {}
+    list_cats_pers = ['PROPN']
+    for oracion in texto_procesado.sents:
+        for palabra in oracion:
+            if palabra.pos_ in dict_cats:
+                dict_cats[palabra.pos_]+=1
+            else:
+                dict_cats[palabra.pos_]=1
+            
+            if palabra.pos_ in list_cats_pers:
+                if palabra.text+'-'+palabra.pos_ in dict_pers:
+                    dict_pers[palabra.text+'-'+palabra.pos_]+=1
+                else:
+                    dict_pers[palabra.text+'-'+palabra.pos_]=1
+    dict_pers_inv = {valor: clave for clave, valor in dict_pers.items()}
+    dict_pers_ord = dict(sorted(dict_pers.items(), key=lambda item: item[1], reverse=True))
+    plt.bar(dict_pers_ord.keys(),dict_pers_ord.values())
     plt.show()
     return pers,luga
 
