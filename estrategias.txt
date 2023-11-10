@@ -7,17 +7,18 @@ Estrategia #2: con un diccionario de todos las letras presentes en el texto (con
 Retos al implementar la estrategia y como se abordaron: a pesar de que no se encontraron contratiempos ni retos al implementar la estrategia, se teme que por la cantidad de procesos de busqueda dentro del for pueda ralentizar el proceso.
 Análisis de resultados: la funcion es capaz de identificar el idioma adecuadamente en todos los casos de prueba.
 
-9.	Estrategia #1: g
-Retos al implementar la estrategia y como se abordaron: g
-Análisis de resultados: n
+9.	Estrategia #1: usar la libreria spacy para procesar el texto, y dependiendo del idioma del texto, se usa un modelo de lenguaje diferente para el idioma del texto. Crear un diccionario con todas las palabras que cominecen por una mayuscula, que tengan una longitud estrictamente mayor a dos, que no sean precedidas por un punto, signo de interrogacion o signo de exclamacion, que no tengan una copia de la palabra en minuscula en el texto y que sean reconocidas como nombres propios por spacy. Luego, separar las palabras/entidades a un diccionario de frecuencias de solo nombres con el label de entidad "PER". Esta funcion se hace en conjunto con el 10.
+Retos al implementar la estrategia y como se abordaron: A pesar de que encontrar palabras que empiecen por una mayuscula no es dificil, distinguirlas de nombres es mas complicado. Por ello se metieron varias condiciones para evitar que se metieran palabras no correspondientes a nombre propios. A pesar de eso, debido a la imprecision del modelo de spacy para el lenguaje español, igual se llegaron a filtrar bastantes palabras. Por ello, se decidio eliminar todos los nombres con una sola aparicion. Ademas, se obvia la presencia de una mayuscula al principio deel nombre, pero en caso de apodos y pronombres, estos no son contados, a pesar de que hacen referencia a algun personaje. 
+Análisis de resultados: A pesar de todos los cambios implementados, muchas palabras "basura" se siguen filtrando en el resultado final.
 
-10.	Estrategia #1: g
-Retos al implementar la estrategia y como se abordaron: g
-Análisis de resultados: n
+10.	Estrategia #1: usar la libreria spacy para procesar el texto, y dependiendo del idioma del texto, se usa un modelo de lenguaje diferente para el idioma del texto. Crear un diccionario con todas las palabras que cominecen por una mayuscula, que tengan una longitud estrictamente mayor a dos, que no sean precedidas por un punto, signo de interrogacion o signo de exclamacion, que no tengan una copia de la palabra en minuscula en el texto y que sean reconocidas como nombres propios por spacy. Luego, separar las palabras/entidades a un conjunto de solo lugares con el label de entidad "LOC". Esta funcion se hace en conjunto con el 9.
+Retos al implementar la estrategia y como se abordaron: A pesar de que encontrar palabras que empiecen por una mayuscula no es dificil, distinguirlas de nombres es mas complicado. Por ello se metieron varias condiciones para evitar que se metieran palabras no correspondientes a nombre propios de ciudades. A pesar de eso, debido a la imprecision del modelo de spacy para el lenguaje español, igual se llegaron a filtrar bastantes palabras. Por ello, se decidio eliminar todos los lugares con una sola aparicion. Ademas, se obvia la presencia de una mayuscula al principio del nombre del lugar, pero en caso de pronombres, estos no son contados, a pesar de que hacen referencia a algun lugar. 
+Análisis de resultados: A pesar de todos los cambios implementados, muchas palabras "basura" se siguen filtrando en el resultado final.
 
-11.	Estrategia #1: g
-Retos al implementar la estrategia y como se abordaron: g
-Análisis de resultados: n
+
+11.	Estrategia #1: Se usa como base el diccionario de frecuencia de nombres, y se incluyen en una lista solo aquellos que aparecen al menos cada 450 palabras aproximadamente. 
+Retos al implementar la estrategia y como se abordaron: encontrar un numero adecuado para hacer de frontera entre personaje principal y secundario fue bastante decisivo. En varias obras en la que se aplico la funcion los numeros para incluir a sus personajes principales y excluir a los secundarios eran bastante diferentes. Despues de bastante prueba y error, se opto por definir la frecuencia por cada 450 palabras.
+Análisis de resultados: No es completamente preciso debido a la imprecision del diccionario de presonajes.
 
 12.	Estrategia #1: g
 Retos al implementar la estrategia y como se abordaron: g
