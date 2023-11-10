@@ -47,11 +47,13 @@ def personas_y_lugares(texto_sin_saltos,lenguaje):
         texto_procesado=nlpen(texto_sin_saltos)
     pers,luga={},[]
     for ent in texto_procesado.ents:
-        if ent.label_=="LOC":
+        if ent.label_=="LOC" and str(ent.text).istitle() and len(str(ent.text))>2:
             luga.append(ent.text)
-        elif ent.label_=="PERSON":
+        elif ent.label_=="PERSON" and str(ent.text).istitle() and len(str(ent.text))>2:
             pers[ent.text]=pers.get(ent.text,0)+1
         return pers,luga
+
+def personajes(
 
 def personajes_principales(pers,longitud_lista_palabras):
     inv,pers_prin={},[]
