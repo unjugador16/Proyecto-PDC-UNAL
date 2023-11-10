@@ -150,11 +150,12 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     else:
         texto_procesado=nlpen(texto_sin_saltos)
     pers,luga={},[]
-    for ent in texto_procesado.ents:
-        if ent.label_=="LOC":
-            luga.append(ent.text)
-        elif ent.label_=="PERSON":
-            pers[ent.text]=pers.get(ent.text,0)+1
+    for sent in texto_procesado.sents:
+        for ent in sent.ents:
+            if ent.label_=="LOC":
+                luga.append(ent.text)
+            elif ent.label_=="PERSON":
+                pers[ent.text]=pers.get(ent.text,0)+1
     plt.bar(pers.keys(),pers.values())
     plt.show()
     return pers,luga
