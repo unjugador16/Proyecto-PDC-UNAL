@@ -152,9 +152,9 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     pers,luga={},[]
     for sent in texto_procesado.sents:
         for ent in sent.ents:
-            if ent.label_=="LOC":
+            if ent.label_=="LOC" or ent.label_=="GPE" or ent.label_=="LOCATION":
                 luga.append(ent.text)
-            elif ent.label_=="PERSON":
+            elif ent.label_=="PERSON" or ent.label_=="PER" or ent.label_=="MISC":
                 pers[ent.text]=pers.get(ent.text,0)+1
     plt.bar(pers.keys(),pers.values())
     plt.show()
