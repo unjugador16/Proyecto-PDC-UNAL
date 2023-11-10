@@ -163,7 +163,7 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
         for ent in chunk.ents:
             if ent.text in dict_pers_o_luga:
                 if ent.label_=="PER" or ent.label_=="PERSON":
-                    dict_pers[ent.text]=dict_pers_o_luga.get(ent.text)+1
+                    dict_pers[ent.text]=dict_pers_o_luga.get(ent.text)
                 elif ent.label_=="LOC" or ent.label_=="LOCATION" or ent.label_=="GPE":
                     list_luga.append(ent.text)
     dict_pers_inv,set_luga = {valor: clave for clave, valor in dict_pers.items()},set(list_luga)
