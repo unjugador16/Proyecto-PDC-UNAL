@@ -1,16 +1,26 @@
-def normalize(s):
-    rem = {
-        "a": "áäàâã",
-        "e": "éëèê",
-        "i": "íïìî",
-        "o": "óöòôõ",
-        "u": "úüùô",
-        "n": "ñ",
-        "y": "ýÿ"
+def crudificar_texto(texto):
+    texto_crudo=""
+    signos = r'ºª!|@·•#$£€~%&¬/\()=?"¿¡`^[]+*}¨´{_-:—.;,‘“”❝❞™®©' # faltan las comillas simples, pero no se le agregan porque en frances e ingles se usan, y las dos lineas — son diferentes, entonces no las quiten pls
+    acentos = {'á','ä','à','â','ã','é','ë','è','ê','í','ï','ì','î','ó','ö','ò','ô','õ','ú','ü','ù','û','ý','ÿ'}
+    correccion = {
+    'a': {'á','ä','à','â','ã'},
+    'e': {'é','ë','è','ê'},
+    "i": {'í','ï','ì','î'},
+    "o": {'ó','ö','ò','ô','õ'},
+    "u": {'ú','ü','ù','û'},
+    "y": {'ý','ÿ'}
     }
-    for a, b in rem:
-        s = s.replace(a, b).replace(a.upper(), b.upper())
-    return s
+    for i in texto:
+    if i == "’":
+        i = "'"
+    if i not in signos and i != "'" and i != '\n' and i != ' ':
+        if i in acentos:
+            for j in correccion:
+                if i in correccion[j]:
+                    texto_crudo += j.lower()
+        else:
+            texto_crudo += i.lower()
+    return texto_crudo
 
 def identificar_abecedario(a):
     español,frances,aleman,portugues,esp,fra,ale,por=set(["ñ","á","é","í","ó","ú","ü"]),set(["æ","œ","ç","à","â","é","è","ê","ë","î","ï","ô","ù","û","ü","ÿ"]),set(["ä","ö","ü","ß"]),set(["á","à","â","ã","é","ê","í","ó","ô","õ","ú","ç"]),0,0,0,0
