@@ -155,7 +155,7 @@ def personas(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 pa
     list_cats_pers = ['PROPN']
     for oracion in texto_procesado.sents:
         for palabra in oracion:            
-            if palabra.pos_ in list_cats_pers and str(palabra.text).istitle() and len(str(palabra.text))>2 and palabra.text not in lista_texto:
+            if palabra.pos_ in list_cats_pers and str(palabra.text).istitle() and len(str(palabra.text))>2 and str(palabra.text).lower() not in lista_texto:
                 if palabra.text in dict_pers:
                     dict_pers[palabra.text]+=1
                 else:
