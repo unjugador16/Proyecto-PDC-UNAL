@@ -16,6 +16,7 @@ nlpen = spacy.load("en_core_web_sm")
 nlpde = spacy.load("nl_core_news_sm")
 nlpfr = spacy.load("fr_core_news_sm")
 nlppo = spacy.load("pt_core_news_sm")
+import math
 
 def leer_texto(nombre): #1
     """
@@ -152,9 +153,9 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     pers,luga={},[]
     for sent in texto_procesado.sents:
         for ent in sent.ents:
-            if ent.label_=="LOC" or ent.label_=="GPE" or ent.label_=="LOCATION":
+            if ent.label_=="LOC" or ent.label_=="GPE":
                 luga.append(ent.text)
-            elif ent.label_=="PERSON" or ent.label_=="PER" or ent.label_=="MISC":
+            elif ent.label_=="PER" or ent.label_=="MISC":
                 pers[ent.text]=pers.get(ent.text,0)+1
     plt.bar(pers.keys(),pers.values())
     plt.show()
