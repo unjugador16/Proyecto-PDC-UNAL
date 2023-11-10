@@ -150,21 +150,15 @@ def personas(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 pa
         texto_procesado=nlppo(texto_sin_saltos)
     else:
         texto_procesado=nlpen(texto_sin_saltos)    
-    dict_cats = {}
     dict_pers = {}
     list_cats_pers = ['PROPN']
     for oracion in texto_procesado.sents:
-        for palabra in oracion:
-            if palabra.pos_ in dict_cats:
-                dict_cats[palabra.pos_]+=1
-            else:
-                dict_cats[palabra.pos_]=1
-            
-            if palabra.pos_ in list_cats_pers:
-                if palabra.text+'-'+palabra.pos_ in dict_pers:
-                    dict_pers[palabra.text+'-'+palabra.pos_]+=1
+        for palabra in oracion:            
+            if palabra.pos_ in list_cats_pers and str(palabra.text).istitle() and len(str(palabra.text))>2:
+                if palabra.text in dict_pers:
+                    dict_pers[palabra.text]+=1
                 else:
-                    dict_pers[palabra.text+'-'+palabra.pos_]=1
+                    dict_pers[palabra.text]=1
     dict_pers_inv = {valor: clave for clave, valor in dict_pers.items()}
     dict_pers_ord = dict(sorted(dict_pers.items(), key=lambda item: item[1], reverse=True))
     plt.bar(dict_pers_ord.keys(),dict_pers_ord.values())
