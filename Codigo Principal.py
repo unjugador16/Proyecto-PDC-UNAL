@@ -139,7 +139,7 @@ def palabras_frec_nostop(texto,lang): #8
         del frec_pal_inv[max(frec_pal_inv)]
     return cinc_pal_stop
 
-def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 para todos los idiomas
+def personas(texto_sin_saltos,lenguaje): #9 sin histograma de personajes y 11 para todos los idiomas
     if lenguaje=="es":
         texto_procesado=nlpes(texto_sin_saltos)
     elif lenguaje=="fr":
@@ -169,7 +169,7 @@ def personas_y_lugares(texto_sin_saltos,lenguaje): #9 sin histograma de personaj
     dict_pers_ord = dict(sorted(dict_pers.items(), key=lambda item: item[1], reverse=True))
     plt.bar(dict_pers_ord.keys(),dict_pers_ord.values())
     plt.show()
-    return pers,luga
+    return dict_pers_ord
 
 def personajes_principales(pers,longitud_lista_palabras): #10
     inv,pers_prin={},[]
